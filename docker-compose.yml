@@ -1,0 +1,45 @@
+services:
+  skdevelopers-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ghcr.io/skdevelopers/skdevelopers-info:${IMAGE_TAG:-latest}
+    container_name: skdevelopers_prod
+    restart: unless-stopped
+    user: "1001:1001"
+    read_only: true
+    tmpfs:
+      - /tmp
+    ports:
+      # CRITICAL: Bind strictly to loopback on Contabo 12GB VPS so port 3000 is never exposed to the public internet.
+      # Virtualmin Apache/Nginx reverse proxy forwards https://skdevelopers.info -> http://127.0.0.1:3080
+      - "127.0.0.1:3080:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - APP_URL=https://skdevelopers.info
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  skdevelopers-staging:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ghcr.io/skdevelopers/skdevelopers-info:${STAGING_IMAGE_TAG:-staging}
+    container_name: skdevelopers_staging
+    restart: unless-stopped
+    user: "1001:1001"
+    read_only: true
+    tmpfs:
+      - /tmp
+    ports:
+      - "127.0.0.1:3081:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - APP_URL=https://staging.skdevelopers.info
+    profiles:
+      - staging

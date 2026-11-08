@@ -1,0 +1,31 @@
+name: SK Developers CI & Contabo VPS Release
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Run TypeScript type check
+        run: npm run lint
+
+      - name: Run unit tests
+        run: npx --yes tsx --test src/utils/engine.test.ts
+
+      - name: Build production bundle
+        run: npm run build

@@ -1,0 +1,6 @@
+{
+  "name": "SK Developers — Enterprise Software, AI Automation & Cloud Infrastructure",
+  "description": "Official corporate platform of SK Developers, founded by Senior Software Architect Muhammad Salman Khalid. Engineering enterprise ERP systems, AI automation, multi-tenant SaaS, FinTech ledgers, and cloud infrastructure.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
